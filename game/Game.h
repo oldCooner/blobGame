@@ -7,9 +7,18 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 
+#include "LevelOne.h"
+
+enum gameLevels
+{
+    LEVEL_ONE
+};
+
 extern SDL_Renderer *pGameRenderer;
 extern SDL_Window *pGameWindow;
 extern int iWindowWidth, iWindowHeight;
+
+extern enum gameLevels currentLevel;
 
 int Game_Init(); // initialize window and load headers
 void Game_Run();

@@ -4,20 +4,21 @@ SDL_Renderer *pGameRenderer = NULL;
 SDL_Window *pGameWindow = NULL;
 int iWindowWidth, iWindowHeight;
 
+enum gameLevels currentLevel;
+
 int Game_Init()
 {
     if( SDL_CreateWindowAndRenderer( "c_sdl_template", 0, 0, SDL_WINDOW_FULLSCREEN, &pGameWindow, &pGameRenderer ) )
     {
         if( TTF_Init() )
         {
-            SDL_SetRenderDrawColor( pGameRenderer, 0, 0, 0, 255 );
+            SDL_SetRenderDrawColor( pGameRenderer, 255, 255, 255, 255 );
 
             SDL_SyncWindow( pGameWindow );
             SDL_GetWindowSize( pGameWindow, &iWindowWidth, &iWindowHeight );
 
-            /*
-                LOAD ALL TEXTURES HERE
-            */
+            currentLevel = LEVEL_ONE;
+            LevelOne_Init(pGameRenderer);
         } else
         {
             fprintf(stderr, "Failed to Initialize the TTF Module! SDL ERROR: %s\n", SDL_GetError());
@@ -48,7 +49,7 @@ void Game_Run()
     SDL_Event sdlEvents;
     int bGameRunning;
 
-    SDL_SetRenderDrawColor( pGameRenderer, 0, 0, 0, 225 );
+    SDL_SetRenderDrawColor( pGameRenderer, 255, 255, 255, 225 );
     SDL_RenderClear( pGameRenderer );
     Game_Render();
     SDL_RenderPresent( pGameRenderer );
@@ -70,7 +71,7 @@ void Game_Run()
             break;
 
         // Main Game Loop
-        SDL_SetRenderDrawColor( pGameRenderer, 0, 0, 0, 255 );
+        SDL_SetRenderDrawColor( pGameRenderer, 255, 255, 255, 255 );
         SDL_RenderClear(pGameRenderer);
         Game_Render();
         SDL_RenderPresent(pGameRenderer);
@@ -79,9 +80,15 @@ void Game_Run()
 
 void Game_Render()
 {
-    /*
-        INSERT RENDERING HERE
-    */
+    switch(currentLevel)
+    {
+        case LEVEL_ONE:
+            LevelOne_Render(pGameRenderer);
+            break;
+
+        default:
+            break;
+    }
 }
 
 void Game_EventHandling()

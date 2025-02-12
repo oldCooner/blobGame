@@ -25,6 +25,6 @@ void Game_Run();
 void Game_Close(); // close the game
 
 void Game_Render();
-void Game_EventHandling();
+void Game_EventHandling(SDL_Event *pSDLEvent);
 
 #endif

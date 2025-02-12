@@ -64,7 +64,7 @@ void Game_Run()
             break;
         } else
         {
-            Game_EventHandling();
+            Game_EventHandling(&sdlEvents);
         }
 
         if(!bGameRunning)
@@ -91,9 +91,15 @@ void Game_Render()
     }
 }
 
-void Game_EventHandling()
+void Game_EventHandling(SDL_Event *pSDLEvent)
 {
-    /*
-        HANDLE SDL EVENTS HERE
-    */
+    switch(currentLevel)
+    {
+        case LEVEL_ONE:
+            LevelOne_HandleInput(pSDLEvent);
+            break;
+
+        default:
+            break;
+    }
 }

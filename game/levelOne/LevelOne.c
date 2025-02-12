@@ -102,7 +102,7 @@ void LevelOne_HandleInput(SDL_Event *pSDLEvent)
 void Internal_MovePlayer(int iXOffset, int iYOffset)
 {
     SDL_FRect rectMovingTo;
-    int i;
+    //int i;
 
     rectMovingTo = arrCollisionRects[PLAYER_BLOB];
 

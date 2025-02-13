@@ -4,6 +4,8 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 
+#include "GameConsts.h"
+
 // enums
 enum collisionRects
 {
@@ -11,7 +13,6 @@ enum collisionRects
     PLATFORM_B,
     PLATFORM_WIN,
     OBJECT_BOX,
-    PLAYER_BLOB,
     COLLISION_RECT_COUNT
 };
 
@@ -23,15 +24,21 @@ enum playerStates
 
 // vars
 extern SDL_FRect arrCollisionRects[COLLISION_RECT_COUNT];
+extern SDL_FRect playerRect;
 
 extern enum playerStates currentPlayerState;
+extern int bIsJumping, iJumpTime;
+
+extern int iPlayerXVel, iPlayerYVel;
 
 // external funcs
 void LevelOne_Init(SDL_Renderer *pGameRenderer);
 void LevelOne_Render(SDL_Renderer *pGameRenderer);
 void LevelOne_HandleInput(SDL_Event *pSDLEvent);
 
+void LevelOne_Tick();
+
 // internal funcs
-void Internal_MovePlayer(int iXOffset, int iYOffset);
+void Internal_MovePlayer();
 
 #endif

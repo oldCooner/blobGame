@@ -3,8 +3,8 @@
 A quick template for making a game using CMake and static linked SDL libraries.
 
 ## TO-DO
-Remove player_blob from arrCollisionRects
 Add gravity to tick
+Add enum of states for falling v jumping
 
 ## Installation
 

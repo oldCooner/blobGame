@@ -1,8 +1,12 @@
 #include "LevelOne.h"
 
 SDL_FRect arrCollisionRects[COLLISION_RECT_COUNT];
+SDL_FRect playerRect;
 
 enum playerStates currentPlayerState;
+int bIsJumping, iJumpTime;
+
+int iPlayerXVel, iPlayerYVel;
 
 void LevelOne_Init(SDL_Renderer *pGameRenderer)
 {
@@ -18,6 +22,9 @@ void LevelOne_Init(SDL_Renderer *pGameRenderer)
     iWinPlatformWidth = 50;
     iPlatformHeight = 20;
     iBoxSize = 100;
+    bIsJumping = 0;
+    iPlayerXVel = 0;
+    iPlayerYVel = 0;
 
     // other vars
     currentPlayerState = PLAYER_BLOB_STATE;
@@ -44,10 +51,10 @@ void LevelOne_Init(SDL_Renderer *pGameRenderer)
     arrCollisionRects[OBJECT_BOX].h = iBoxSize;
 
     // player init
-    arrCollisionRects[PLAYER_BLOB].x = 745;
-    arrCollisionRects[PLAYER_BLOB].y = 569;
-    arrCollisionRects[PLAYER_BLOB].h = 30;
-    arrCollisionRects[PLAYER_BLOB].w = 30;
+    playerRect.x = 745;
+    playerRect.y = 569;
+    playerRect.h = 30;
+    playerRect.w = 30;
 }
 
 void LevelOne_Render(SDL_Renderer *pGameRenderer)
@@ -68,7 +75,7 @@ void LevelOne_Render(SDL_Renderer *pGameRenderer)
     switch(currentPlayerState)
     {
         case PLAYER_BLOB_STATE:
-            SDL_RenderFillRect( pGameRenderer, &arrCollisionRects[PLAYER_BLOB] );
+            SDL_RenderFillRect( pGameRenderer, &playerRect );
             break;
         
             default:
@@ -84,52 +91,41 @@ void LevelOne_HandleInput(SDL_Event *pSDLEvent)
         {
             case SDLK_LEFT:
             case SDLK_A:
-                Internal_MovePlayer( -1, 0 );
+                iPlayerXVel = -1;
                 break;
 
             case SDLK_RIGHT:
             case SDLK_D:
-                Internal_MovePlayer( 1, 0 );
+                iPlayerXVel = 1;
                 break;
 
             case SDLK_SPACE:
-                Internal_MovePlayer( 0, 1 );
+                bIsJumping = 1;
+                break;
+        }
+    } else if( pSDLEvent->type==SDL_EVENT_KEY_UP )
+    {
+        switch( pSDLEvent->key.key )
+        {
+            case SDLK_LEFT:
+            case SDLK_A:
+            case SDLK_RIGHT:
+            case SDLK_D:
+                iPlayerXVel = 0;
                 break;
         }
     }
 }
 
-void Internal_MovePlayer(int iXOffset, int iYOffset)
+void Internal_MovePlayer()
 {
     SDL_FRect rectMovingTo;
-    //int i;
+    int i;
 
-    rectMovingTo = arrCollisionRects[PLAYER_BLOB];
-
-    // generate rect we would be moving too
-    if( iYOffset == 0 )
-    { // we are moving left or right
-
-        if( iXOffset > 0 )
-        { // we are moving right
-            rectMovingTo.x++;
-        } else
-        { // we are moving left
-            rectMovingTo.x--;
-        }
-
-    } else if ( iXOffset == 0 )
-    { // we are moving up down
-
-        if( iYOffset < 0 )
-        { // we are moving up
-            rectMovingTo.y++;
-        } else
-        { // we are moving down
-            rectMovingTo.y--;
-        }
-
-    }
+    // move
+    rectMovingTo = playerRect;
+    rectMovingTo.x += iPlayerXVel;
+    rectMovingTo.y += iPlayerYVel;
 
     // check for future collision
     for( i = 0; i < COLLISION_RECT_COUNT; i++ )
@@ -142,5 +138,32 @@ void Internal_MovePlayer(int iXOffset, int iYOffset)
     }
 
     // if we made it out that for loop, we are good
-    arrCollisionRects[PLAYER_BLOB] = rectMovingTo;
+    playerRect = rectMovingTo;
+}
+
+void LevelOne_Tick()
+{
+    // handle jump time
+    if(bIsJumping)
+    {
+        if(iJumpTime == 0)
+        { // first time jumping
+            iPlayerYVel = -1;
+            iJumpTime = GAME_JUMP_TIME;
+        } else if( iJumpTime == 1 )
+        { // this is our last jump frame
+            iJumpTime = 0;
+            bIsJumping = 0;
+        } else
+        {
+            iJumpTime--;
+        }
+    } else
+    {
+        iPlayerYVel = 0;
+    }
+
+    // handle movement
+    if( iPlayerXVel != 0 || iPlayerYVel != 0 )
+        Internal_MovePlayer();
 }

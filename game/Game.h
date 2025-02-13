@@ -8,7 +8,13 @@
 #include <stdio.h>
 
 #include "LevelOne.h"
+#include "LTimer.h"
 
+// defines
+#define SCREEN_FPS 240
+#define SCREEN_TICKS_PER_FRAME 1000/SCREEN_FPS
+
+// enums
 enum gameLevels
 {
     LEVEL_ONE
@@ -26,5 +32,6 @@ void Game_Close(); // close the game
 
 void Game_Render();
 void Game_EventHandling(SDL_Event *pSDLEvent);
+void Game_Tick();
 
 #endif

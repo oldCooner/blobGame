@@ -47,7 +47,9 @@ void Game_Close()
 void Game_Run()
 {
     SDL_Event sdlEvents;
+    objTimer gameTimer;
     int bGameRunning;
+    int iFrameTicks;
 
     SDL_SetRenderDrawColor( pGameRenderer, 255, 255, 255, 225 );
     SDL_RenderClear( pGameRenderer );
@@ -70,11 +72,18 @@ void Game_Run()
         if(!bGameRunning)
             break;
 
+        Timer_Start(&gameTimer);
+
+        Game_Tick();
         // Main Game Loop
         SDL_SetRenderDrawColor( pGameRenderer, 255, 255, 255, 255 );
         SDL_RenderClear(pGameRenderer);
         Game_Render();
         SDL_RenderPresent(pGameRenderer);
+
+        iFrameTicks = Timer_GetTicks(&gameTimer);
+        if( iFrameTicks < SCREEN_TICKS_PER_FRAME )
+            SDL_Delay( SCREEN_TICKS_PER_FRAME - iFrameTicks );
     }
 }
 
@@ -97,6 +106,19 @@ void Game_EventHandling(SDL_Event *pSDLEvent)
     {
         case LEVEL_ONE:
             LevelOne_HandleInput(pSDLEvent);
+            break;
+
+        default:
+            break;
+    }
+}
+
+void Game_Tick()
+{
+    switch(currentLevel)
+    {
+        case LEVEL_ONE:
+            LevelOne_Tick();
             break;
 
         default:

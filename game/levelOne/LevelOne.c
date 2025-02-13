@@ -21,7 +21,7 @@ void LevelOne_Init(SDL_Renderer *pGameRenderer)
     // level consts
     iWinPlatformWidth = 50;
     iPlatformHeight = 20;
-    iBoxSize = 100;
+    iBoxSize = 60;
     bIsJumping = 0;
     iPlayerXVel = 0;
     iPlayerYVel = 0;
@@ -141,6 +141,29 @@ void Internal_MovePlayer()
     playerRect = rectMovingTo;
 }
 
+void Internal_FallPlayer()
+{
+    SDL_FRect rectFallingTo;
+    int i;
+
+    // move
+    rectFallingTo = playerRect;
+    rectFallingTo.y += 1.5f; // someone said you fall twice as hard as you jump
+
+    // check for future collision
+    for( i = 0; i < COLLISION_RECT_COUNT; i++ )
+    {
+        if( SDL_HasRectIntersectionFloat( &rectFallingTo, &arrCollisionRects[i] ) )
+        {
+            // we can't move
+            return;
+        }
+    }
+
+    // if we made it out that for loop, we are good
+    playerRect = rectFallingTo;
+}
+
 void LevelOne_Tick()
 {
     // handle jump time
@@ -161,6 +184,7 @@ void LevelOne_Tick()
     } else
     {
         iPlayerYVel = 0;
+        Internal_FallPlayer();
     }
 
     // handle movement

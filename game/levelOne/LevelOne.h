@@ -40,5 +40,6 @@ void LevelOne_Tick();
 
 // internal funcs
 void Internal_MovePlayer();
+void Internal_FallPlayer();
 
 #endif

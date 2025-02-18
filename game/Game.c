@@ -5,6 +5,7 @@ SDL_Window *pGameWindow = NULL;
 int iWindowWidth, iWindowHeight;
 
 enum gameLevels currentLevel;
+int bGoToNextLevel;
 
 int Game_Init()
 {
@@ -17,8 +18,12 @@ int Game_Init()
             SDL_SyncWindow( pGameWindow );
             SDL_GetWindowSize( pGameWindow, &iWindowWidth, &iWindowHeight );
 
-            currentLevel = LEVEL_ONE;
-            LevelOne_Init(pGameRenderer);
+            bGoToNextLevel = 0;
+            //currentLevel = LEVEL_ONE;
+            //LevelOne_Init(pGameRenderer);
+
+            currentLevel = LEVEL_TWO;
+            LevelTwo_Init(pGameRenderer);
         } else
         {
             fprintf(stderr, "Failed to Initialize the TTF Module! SDL ERROR: %s\n", SDL_GetError());
@@ -95,6 +100,10 @@ void Game_Render()
             LevelOne_Render(pGameRenderer);
             break;
 
+        case LEVEL_TWO:
+            LevelTwo_Render(pGameRenderer);
+            break;
+
         default:
             break;
     }
@@ -108,6 +117,10 @@ void Game_EventHandling(SDL_Event *pSDLEvent)
             LevelOne_HandleInput(pSDLEvent);
             break;
 
+        case LEVEL_TWO:
+            LevelTwo_HandleInput(pSDLEvent);
+            break;
+
         default:
             break;
     }
@@ -118,10 +131,37 @@ void Game_Tick()
     switch(currentLevel)
     {
         case LEVEL_ONE:
-            LevelOne_Tick();
+            LevelOne_Tick( &bGoToNextLevel );
+            break;
+
+        case LEVEL_TWO:
+            LevelTwo_Tick( &bGoToNextLevel );
             break;
 
         default:
             break;
+    }
+
+    // did we win?
+    if( bGoToNextLevel )
+    {
+        switch(currentLevel)
+        {
+            case LEVEL_ONE:
+                LevelOne_Destroy();
+                currentLevel = LEVEL_TWO;
+                LevelTwo_Init(pGameRenderer);
+                bGoToNextLevel = 0;
+                break;
+            
+            case LEVEL_TWO:
+                LevelTwo_Destroy();
+                currentLevel = LEVEL_THREE;
+                bGoToNextLevel = 0;
+                break;
+            
+            default:
+                break;
+        }
     }
 }

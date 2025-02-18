@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "LevelOne.h"
+#include "LevelTwo.h"
 #include "LTimer.h"
 
 // defines
@@ -17,7 +18,9 @@
 // enums
 enum gameLevels
 {
-    LEVEL_ONE
+    LEVEL_ONE,
+    LEVEL_TWO,
+    LEVEL_THREE
 };
 
 extern SDL_Renderer *pGameRenderer;
@@ -25,6 +28,7 @@ extern SDL_Window *pGameWindow;
 extern int iWindowWidth, iWindowHeight;
 
 extern enum gameLevels currentLevel;
+extern int bGoToNextLevel;
 
 int Game_Init(); // initialize window and load headers
 void Game_Run();

@@ -16,14 +16,16 @@ add_subdirectory(libs/SDL3_image EXCLUDE_FROM_ALL)
 add_subdirectory(libs/SDL3_ttf EXCLUDE_FROM_ALL)
 
 include_directories("game"
-                    "game/levelOne"
+                    "game/levels"
                     "src/SDLTools"
                     )
 
 set(SOURCE_FILES
     main.c
     game/Game.c
-    game/levelOne/LevelOne.c
+    game/levels/BaseLevel.c
+    game/levels/LevelOne.c
+    game/levels/LevelTwo.c
     src/SDLTools/LTimer.c
     )
 

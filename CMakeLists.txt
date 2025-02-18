@@ -26,6 +26,7 @@ set(SOURCE_FILES
     game/levels/BaseLevel.c
     game/levels/LevelOne.c
     game/levels/LevelTwo.c
+    game/levels/LevelThree.c
     src/SDLTools/LTimer.c
     )
 

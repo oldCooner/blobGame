@@ -7,6 +7,7 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 
+#include "LevelThree.h"
 #include "LevelOne.h"
 #include "LevelTwo.h"
 #include "LTimer.h"

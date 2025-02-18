@@ -22,8 +22,8 @@ int Game_Init()
             //currentLevel = LEVEL_ONE;
             //LevelOne_Init(pGameRenderer);
 
-            currentLevel = LEVEL_TWO;
-            LevelTwo_Init(pGameRenderer);
+            currentLevel = LEVEL_THREE;
+            LevelThree_Init(pGameRenderer);
         } else
         {
             fprintf(stderr, "Failed to Initialize the TTF Module! SDL ERROR: %s\n", SDL_GetError());
@@ -104,6 +104,10 @@ void Game_Render()
             LevelTwo_Render(pGameRenderer);
             break;
 
+        case LEVEL_THREE:
+            LevelThree_Render(pGameRenderer);
+            break;
+
         default:
             break;
     }
@@ -119,6 +123,10 @@ void Game_EventHandling(SDL_Event *pSDLEvent)
 
         case LEVEL_TWO:
             LevelTwo_HandleInput(pSDLEvent);
+            break;
+        
+        case LEVEL_THREE:
+            LevelThree_HandleInput(pSDLEvent);
             break;
 
         default:
@@ -136,6 +144,10 @@ void Game_Tick()
 
         case LEVEL_TWO:
             LevelTwo_Tick( &bGoToNextLevel );
+            break;
+
+        case LEVEL_THREE:
+            LevelThree_Tick( &bGoToNextLevel );
             break;
 
         default:
@@ -157,6 +169,7 @@ void Game_Tick()
             case LEVEL_TWO:
                 LevelTwo_Destroy();
                 currentLevel = LEVEL_THREE;
+                LevelThree_Init(pGameRenderer);
                 bGoToNextLevel = 0;
                 break;
             

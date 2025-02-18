@@ -14,6 +14,9 @@ int iHowLongIveBeenJumping;
 int iPlayerXVel, iPlayerYVel;
 enum PlayerStates currentPlayerState;
 
+enum GridCellTypes *arrWaterGrid;
+int iWaterGridWidth, iWaterGridHeight, iWaterGridTotalSize;
+
 int BaseLevel_CheckColissions( SDL_FRect playerRect, SDL_FRect *arrCollisionBoxes, int iCollisionBoxCount, SDL_FRect *arrMovableRects, int iMovableRectCount )
 {
     int i;

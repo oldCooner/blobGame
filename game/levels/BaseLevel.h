@@ -8,6 +8,21 @@
 // defines
 #define WIN_PLATFORM_WIDTH 100
 
+// enums
+enum PlayerStates
+{
+    PLAYER_JUMPING,
+    PLAYER_FALLING,
+    PLAYER_IDLE_OR_MOVING
+};
+
+enum GridCellTypes
+{
+    EMPTY_GRID_CELL,
+    WATER_GRID_CELL,
+    SOLID_GRID_CELL
+};
+
 // vars
 extern SDL_FRect *arrCollisionRects;
 extern int iCollisionRectCount;
@@ -22,13 +37,8 @@ extern int iHowLongIveBeenJumping;
 extern int iPlayerXVel, iPlayerYVel;
 extern enum PlayerStates currentPlayerState;
 
-// enums
-enum PlayerStates
-{
-    PLAYER_JUMPING,
-    PLAYER_FALLING,
-    PLAYER_IDLE_OR_MOVING
-};
+extern enum GridCellTypes *arrWaterGrid;
+extern int iWaterGridWidth, iWaterGridHeight, iWaterGridTotalSize;
 
 int BaseLevel_CheckColissions( SDL_FRect playerRect, SDL_FRect *arrCollisionBoxes, int iCollisionBoxCount, SDL_FRect *arrMovableRects, int iMovableRectCount );
 void BaseLevel_EnactGravity( SDL_FRect *playerRect, SDL_FRect *arrCollisionBoxes, int iCollisionBoxCount, SDL_FRect *arrMovableRects, int iMovableRectCount );

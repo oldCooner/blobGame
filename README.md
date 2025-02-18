@@ -3,8 +3,8 @@
 A quick template for making a game using CMake and static linked SDL libraries.
 
 ## TO-DO
-push box
-start water state
+on Level Three transfer arrCollisionBoxes to SOLID_CELL
+'S' needs to do falling sand (Water)
 
 ## Installation
 

@@ -5,6 +5,7 @@ void LevelThree_Init( SDL_Renderer *pGameRenderer )
     // temp vars
     int iWindowWidth, iWindowHeight;
     int iGrateWidth;
+    int i;
     
     // get window size
     SDL_GetRenderOutputSize( pGameRenderer, &iWindowWidth, &iWindowHeight );
@@ -64,11 +65,24 @@ void LevelThree_Init( SDL_Renderer *pGameRenderer )
     rectPlayer.y = arrCollisionRects[0].y - PLAYER_HEIGHT - 1;
     rectPlayer.w = PLAYER_WIDTH;
     rectPlayer.h = PLAYER_HEIGHT;
+
+    // setup water grid
+    iWaterGridWidth = ceil(iWindowWidth / GRID_CELL_SIZE );
+    iWaterGridHeight = ceil(iWindowHeight / GRID_CELL_SIZE );
+    iWaterGridTotalSize = ( iWaterGridWidth * iWaterGridHeight ) + 1; 
+    arrWaterGrid = malloc( sizeof(enum GridCellTypes) * iWaterGridTotalSize );
+
+    // init water grid to 0
+    for( i = 0; i < iWaterGridTotalSize; i++ )
+    {
+        arrWaterGrid[i] = EMPTY_GRID_CELL;
+    }
 }
 
 void LevelThree_Destroy()
 {
     free(arrCollisionRects);
+    free(arrWaterGrid);
 }
 
 void LevelThree_Render( SDL_Renderer *pGameRenderer )

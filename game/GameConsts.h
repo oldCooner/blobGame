@@ -5,6 +5,7 @@
 #define GAME_JUMP_TIME 75 // how many ticks to jump
 
 #define TILE_SIZE 10 // size of one grid tile
+#define GRID_CELL_SIZE 5 // size of one grid tile
 
 #define PLAYER_HEIGHT 30
 #define PLAYER_WIDTH 30

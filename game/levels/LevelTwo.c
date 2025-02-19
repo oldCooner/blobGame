@@ -109,7 +109,7 @@ void LevelTwo_Tick( int *bGoToNextLevel )
 
     if( bPushedABlock == 0 )
     { // we can push a block or move
-        BaseLevel_HandleLeftRightMovement( &rectPlayer, arrCollisionRects, arrMovableRects, iMovableRectCount, iCollisionRectCount, iPlayerXVel );
+        BaseLevel_HandleLeftRightMovement( &rectPlayer, arrCollisionRects, iCollisionRectCount, arrMovableRects, iMovableRectCount, iPlayerXVel );
     }
 
     BaseLevel_HandleJumping( &rectPlayer, arrCollisionRects, arrMovableRects, iMovableRectCount, iCollisionRectCount, &currentPlayerState, &iHowLongIveBeenJumping );

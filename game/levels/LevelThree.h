@@ -9,6 +9,7 @@
 
 #include "GameConsts.h"
 #include "BaseLevel.h"
+#include "WaterGrid.h"
 
 void LevelThree_Init( SDL_Renderer *pGameRenderer );
 void LevelThree_Destroy();

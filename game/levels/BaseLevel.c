@@ -134,7 +134,7 @@ void BaseLevel_HandleJumping( SDL_FRect *pRectPlayer, SDL_FRect *arrCollisionRec
     }
 }
 
-void BaseLevel_HandleLeftRightMovement( SDL_FRect *pRectPlayer, SDL_FRect *arrCollisionRects, SDL_FRect *arrMovableRects, int iMovableRectCount, int iCollisionRectCount, int iPlayerXVel )
+void BaseLevel_HandleLeftRightMovement( SDL_FRect *pRectPlayer, SDL_FRect *arrCollisionRects, int iCollisionRectCount, SDL_FRect *arrMovableRects, int iMovableRectCount, int iPlayerXVel )
 {
     pRectPlayer->x += iPlayerXVel;
 

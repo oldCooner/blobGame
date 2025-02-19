@@ -5,7 +5,6 @@ void LevelThree_Init( SDL_Renderer *pGameRenderer )
     // temp vars
     int iWindowWidth, iWindowHeight;
     int iGrateWidth;
-    int i;
     
     // get window size
     SDL_GetRenderOutputSize( pGameRenderer, &iWindowWidth, &iWindowHeight );
@@ -69,14 +68,8 @@ void LevelThree_Init( SDL_Renderer *pGameRenderer )
     // setup water grid
     iWaterGridWidth = ceil(iWindowWidth / GRID_CELL_SIZE );
     iWaterGridHeight = ceil(iWindowHeight / GRID_CELL_SIZE );
-    iWaterGridTotalSize = ( iWaterGridWidth * iWaterGridHeight ) + 1; 
-    arrWaterGrid = malloc( sizeof(enum GridCellTypes) * iWaterGridTotalSize );
 
-    // init water grid to 0
-    for( i = 0; i < iWaterGridTotalSize; i++ )
-    {
-        arrWaterGrid[i] = EMPTY_GRID_CELL;
-    }
+    arrWaterGrid = WaterGrid_CreateGrid( iWaterGridWidth, iWaterGridHeight, GRID_CELL_SIZE, arrCollisionRects, iCollisionRectCount, arrMovableRects, iMovableRectCount );
 }
 
 void LevelThree_Destroy()
@@ -98,20 +91,47 @@ void LevelThree_Render( SDL_Renderer *pGameRenderer )
     }
 
     // render player
-    SDL_SetRenderDrawColor( pGameRenderer, 0, 0, 255, 255 );
-    SDL_RenderFillRect( pGameRenderer, &rectPlayer );
+    if( currentPlayerState == PLAYER_WATER_STATE )
+    {
+        WaterGrid_Render( pGameRenderer, arrWaterGrid, iWaterGridWidth, iWaterGridHeight, GRID_CELL_SIZE );
+    } else
+    {
+        SDL_SetRenderDrawColor( pGameRenderer, 0, 0, 255, 255 );
+        SDL_RenderFillRect( pGameRenderer, &rectPlayer );
+    }
 }
 
 void LevelThree_HandleInput( SDL_Event *pSDLEvent )
 {
     BaseLevel_HandleUserInput( pSDLEvent, &iPlayerXVel, &iPlayerYVel, &currentPlayerState );
+
+    if( pSDLEvent->type == SDL_EVENT_KEY_DOWN )
+    {
+        switch( pSDLEvent->key.key )
+        {
+            case SDLK_DOWN:
+            case SDLK_S:
+                currentPlayerState = PLAYER_WATER_STATE;
+                WaterGrid_ConvertPlayer( arrWaterGrid, iWaterGridWidth, iWaterGridHeight, GRID_CELL_SIZE, rectPlayer );
+                break;
+        }
+    }
 }
 
 void LevelThree_Tick( int *bGoToNextLevel )
 {
-    BaseLevel_HandleLeftRightMovement( &rectPlayer, arrCollisionRects, NULL, 0, iCollisionRectCount, iPlayerXVel );
-    BaseLevel_HandleJumping( &rectPlayer, arrCollisionRects, NULL, 0, iCollisionRectCount, &currentPlayerState, &iHowLongIveBeenJumping );
-
-    if(currentPlayerState == PLAYER_IDLE_OR_MOVING)
-        BaseLevel_EnactGravity( &rectPlayer, arrCollisionRects, iCollisionRectCount, arrMovableRects, iMovableRectCount );
+    switch( currentPlayerState )
+    {
+        case PLAYER_WATER_STATE:
+            WaterGrid_Tick( arrWaterGrid, iWaterGridWidth, iWaterGridHeight );
+            break;
+        
+        case PLAYER_IDLE_OR_MOVING:
+            BaseLevel_EnactGravity( &rectPlayer, arrCollisionRects, iCollisionRectCount, arrMovableRects, iMovableRectCount );
+        
+        default:
+            BaseLevel_HandleLeftRightMovement( &rectPlayer, arrCollisionRects, iCollisionRectCount, NULL, 0, iPlayerXVel );
+            BaseLevel_HandleJumping( &rectPlayer, arrCollisionRects, NULL, 0, iCollisionRectCount, &currentPlayerState, &iHowLongIveBeenJumping );
+            break;
+    }
 }

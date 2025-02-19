@@ -1,5 +1,7 @@
 #include "WaterGrid.h"
 
+int iWaterCellCount;
+
 enum GridCellTypes *WaterGrid_CreateGrid( int iWaterGridWidth, int iWaterGridHeight, int iWaterCellSize, SDL_FRect *arrCollisionRects, int iCollisionRectCount, SDL_FRect *arrMovableRects, int iMovableRectCount )
 {
     // tmp vars
@@ -11,6 +13,8 @@ enum GridCellTypes *WaterGrid_CreateGrid( int iWaterGridWidth, int iWaterGridHei
     // init vars
     iTotalGridSize = ( iWaterGridHeight * iWaterGridWidth ) + 1;
     arrWaterGrid = malloc( sizeof(enum GridCellTypes) * iTotalGridSize );
+
+    iWaterCellCount = 0;
 
     recTempCell.x = 0;
     recTempCell.y = 0;
@@ -56,8 +60,6 @@ enum GridCellTypes *WaterGrid_CreateGrid( int iWaterGridWidth, int iWaterGridHei
         recTempCell.y += iWaterCellSize;
     }
 
-
-
     // return
     return arrWaterGrid;
 }
@@ -84,6 +86,7 @@ void WaterGrid_ConvertPlayer( enum GridCellTypes *arrWaterGrid, int iWaterGridWi
                 {
                     case EMPTY_GRID_CELL:
                         arrWaterGrid[ y * iWaterGridWidth + x ] = MAJOR_WATER_CELL;
+                        iWaterCellCount++;
                         break;
                     
                     default:
@@ -173,4 +176,36 @@ void WaterGrid_Render( SDL_Renderer *pGameRenderer, enum GridCellTypes *arrWater
         recTempCell.y += iWaterCellSize;
         recTempCell.x = 0;
     }
+}
+
+SDL_FRect *WaterGrid_GetBodyLocations( int *iOutputSize, enum GridCellTypes *arrWaterGrid, int iWaterGridWidth, int iWaterGridHeight, int iWaterCellSize )
+{
+    // tmp vars
+    SDL_FRect *arrWaterCells;
+    int iArrayIndex;
+    int x, y;
+
+    // init vars
+    *iOutputSize = iWaterCellCount;
+    arrWaterCells = malloc( sizeof(SDL_FRect) * iWaterCellCount );
+    iArrayIndex = 0;
+
+    for( y = 0; y < iWaterGridHeight; y++ )
+    {
+        for( x = 0; x < iWaterGridWidth; x++ )
+        {
+            if( arrWaterGrid[ y * iWaterGridWidth + x ] == MAJOR_WATER_CELL )
+            {
+                arrWaterCells[iArrayIndex].x = x * iWaterCellSize;
+                arrWaterCells[iArrayIndex].y = y * iWaterCellSize;
+                arrWaterCells[iArrayIndex].w = iWaterCellSize;
+                arrWaterCells[iArrayIndex].h = iWaterCellSize;
+
+                iArrayIndex++;
+            }
+        }
+    }
+
+    // return
+    return arrWaterCells;
 }

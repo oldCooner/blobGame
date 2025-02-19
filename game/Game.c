@@ -172,6 +172,11 @@ void Game_Tick()
                 LevelThree_Init(pGameRenderer);
                 bGoToNextLevel = 0;
                 break;
+
+            case LEVEL_THREE:
+                LevelThree_Destroy();
+                currentLevel = LEVEL_FOUR;
+                bGoToNextLevel = 0;
             
             default:
                 break;

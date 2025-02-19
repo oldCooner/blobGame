@@ -21,7 +21,8 @@ enum gameLevels
 {
     LEVEL_ONE,
     LEVEL_TWO,
-    LEVEL_THREE
+    LEVEL_THREE,
+    LEVEL_FOUR
 };
 
 extern SDL_Renderer *pGameRenderer;

@@ -59,6 +59,12 @@ void LevelThree_Init( SDL_Renderer *pGameRenderer )
     arrCollisionRects[6].w = PLAYER_WIDTH / 2;
     arrCollisionRects[6].h = TILE_SIZE;
 
+    // winning platform
+    rectWinPlatform.x = arrCollisionRects[2].x;
+    rectWinPlatform.y = arrCollisionRects[4].y + 200;
+    rectWinPlatform.w = iGrateWidth + (TILE_SIZE * 2);
+    rectWinPlatform.h = TILE_SIZE;
+
     // player
     rectPlayer.x = 100;
     rectPlayer.y = arrCollisionRects[0].y - PLAYER_HEIGHT - 1;
@@ -99,6 +105,10 @@ void LevelThree_Render( SDL_Renderer *pGameRenderer )
         SDL_SetRenderDrawColor( pGameRenderer, 0, 0, 255, 255 );
         SDL_RenderFillRect( pGameRenderer, &rectPlayer );
     }
+
+    // render winning platform
+    SDL_SetRenderDrawColor( pGameRenderer, 0, 255, 0, 255 );
+    SDL_RenderFillRect( pGameRenderer, &rectWinPlatform );
 }
 
 void LevelThree_HandleInput( SDL_Event *pSDLEvent )
@@ -120,10 +130,25 @@ void LevelThree_HandleInput( SDL_Event *pSDLEvent )
 
 void LevelThree_Tick( int *bGoToNextLevel )
 {
+    // tmp vars
+    SDL_FRect *arrWaterCells;
+    int iWaterCellCount;
+    int i;
+
     switch( currentPlayerState )
     {
         case PLAYER_WATER_STATE:
             WaterGrid_Tick( arrWaterGrid, iWaterGridWidth, iWaterGridHeight );
+
+            // check if I hit win platform
+            arrWaterCells = WaterGrid_GetBodyLocations( &iWaterCellCount, arrWaterGrid, iWaterGridWidth, iWaterGridHeight, GRID_CELL_SIZE );
+            for( i = 0; i < iWaterCellCount; i++ )
+            {
+                if( SDL_HasRectIntersectionFloat( &arrWaterCells[i], &rectWinPlatform ) )
+                    *bGoToNextLevel = 1;
+            }
+            free(arrWaterCells);
+
             break;
         
         case PLAYER_IDLE_OR_MOVING:
